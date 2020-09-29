@@ -1,0 +1,31 @@
+version: "3"
+
+tasks:
+  clean:
+    cmds:
+      - rm -r dist/
+
+  build:
+    cmds:
+      - task: dist-folder
+      - task: build-backend
+
+  build-backend:
+    deps:
+      - dist-folder
+    cmds:
+      - go build -o dist/backend
+    env:
+      GOOS: linux
+      GOARCH: "386"
+    sources:
+      - "**/*.go"
+    generates:
+      - dist/backend
+
+  dist-folder:
+    cmds:
+      - mkdir dist/
+      - echo "*" > dist/.gitignore
+    status:
+      - test -f dist/.gitignore
